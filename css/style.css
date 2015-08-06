@@ -1,0 +1,45 @@
+/**** General styles ****/
+h1 {
+	text-align: center;
+}
+.btn {
+	padding: 0px 3px;
+}
+.btn-remove {
+	float: right;
+}
+.center-block {
+	float: inherit;
+}
+caption {
+	font-size: 1.5em;
+   font-weight: bold;
+}
+
+/**** Language list styles ****/
+#table-languages th, #table-languages td  {
+	vertical-align: middle;
+	font-size: 1.2em;
+}
+.lang-code-col {
+	min-width: 3.5em;
+}
+.lang-name-col {
+
+}
+.lang-code {
+   text-transform: uppercase;
+   color: #ccc;
+   font-weight: bold;
+   margin-right: 0.8em;
+   min-width: 2em;
+}
+.lang-li {
+	line-height: 34px;
+}
+.add-lang-li {
+	padding: 10px 5px;
+}
+.badge {
+	vertical-align: middle;
+}

@@ -1,14 +1,89 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="dictApp">
+<html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>Dictionary App | AngularJS</title>
+   <meta charset="UTF-8">
+   <title>Dictionary App | AngularJS</title>
+   <style type="text/css">
+      .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+   </style>
+   <link rel="stylesheet" type="text/css" href="libs/bootstrap/css/bootstrap.css" />
+   <link rel="stylesheet" type="text/css" href="libs/angular-xeditable/css/xeditable.css" />
+   <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
-<body ng-controller="dict">
+<body ng-app="dictApp">
+   <ng-view></ng-view>
 
-	<script src="js/libs/angular.js"></script>
-	<script src="js/libs/angular-route.js"></script>
-	<script src="js/libs/angular-local-storage.min.js"></script>
-	<script src="js/app.js"></script>
+   <script type="text/ng-template" id="dict-index.html">
+      <div class="container">
+         <section id="section-languages" class="center-block col-md-8 col-sm-6 .col-xs-12">
+            <header id="header">
+               <h1>Editor prekladov | AngularJS</h1>
+            </header>
+
+            <form id="langs-form" ng-submit="addLang()">
+               <table id="table-languages" class="table table-condensed">
+                  <caption>Zoznam jazykov:</caption>
+                  <thead>
+                     <tr>
+                        <th>Kód jazyka</th>
+                        <th>Názov jazyka</th>
+                        <th>Počet prekladov</th>
+                     </tr>
+                  </thead>
+                  <tbody class="table-hover">
+                     <tr ng-repeat="lang in languages" class="lang-row" ng-class="{info: lang.edited}">
+                        <th class="lang-code-col">
+                           <span class="lang-code" editable-text="lang.code" onaftersave="editLangs()">{{ lang.code }}</span>
+                        </th>
+                        <td class="lang-name-col">
+                           <span class="lang-name" editable-text="lang.name" onaftersave="editLang(lang)">{{ lang.name }}</span>
+                           <button type="button" ng-click="removeLang(lang)" class="btn btn-danger btn-remove glyphicon glyphicon-remove" title="Vymazať"></button>
+                        </td>
+                        <td class="terms-total-col"><span class="badge">{{ lang.terms.length }}</span></td>
+                     </tr>
+                  </tbody>
+                  <tfoot>
+                     <tr>
+                        <td class="lang-code-col">
+                           <input type="text" id="new-lang-code" ng-model="newLangCode" name="newLangCode" placeholder="Kód jazyka" ng-disabled="saving" class="form-control"  />
+                        </td>
+                        <td class="lang-name-col">
+                           <input type="text" id="new-lang-name" ng-model="newLangName" name="newLangName" placeholder="Pridať nový jazyk" ng-disabled="saving" class="form-control" />
+                        </td>
+                        <td class="terms-total-col"></td>
+                     </tr>
+                  </tfoot>
+               </table>
+            </form>
+
+            <!-- <section id="main">
+               <ul id="languages-list" class="list-group col-md-5 col-sm-6 .col-xs-12">
+                  <li ng-repeat="lang in languages" class="list-group-item lang-li">
+                     <span class="lang-code" editable-text="lang.code">{{ lang.code }}</span>
+                     <span class="lang-name" editable-text="lang.name" onaftersave="lang.save()">{{ lang.name }}</span>
+
+                     <span class="badge">{{ lang.terms.length }}</span>
+                     <button type="button" class="btn btn-danger btn-remove glyphicon glyphicon-remove"></button>
+                  </li>
+                  <li class="list-group-item lang-li add-lang">
+                     <input type="text" ng-model="newLangCode" class="form-control" name="newLangCode" value="" placeholder="Kód jazyka" />
+                     <input type="text" ng-model="newLangName" class="form-control" name="newLangName" value="" placeholder="Pridať nový jazyk" />
+                  </li>
+               </ul>
+            </section> -->
+            <footer id="footer">
+
+            </footer>
+         </section>
+      </div>
+   </script>
+   <script src="libs/bootstrap/js/jquery-1.11.3.min.js"></script>
+   <script src="libs/bootstrap/js/bootstrap.js"></script>
+   <script src="libs/angular.js"></script>
+   <script src="libs/angular-route.js"></script>
+   <script src="libs/angular-local-storage.min.js"></script>
+   <script src="libs/angular-xeditable/js/xeditable.js"></script>
+   <script src="js/app.js"></script>
+   <script src="js/controllers/Storage.js"></script>
 </body>
 </html>
