@@ -2,10 +2,12 @@
 h1 {
 	text-align: center;
 }
-.btn {
-	padding: 0px 3px;
+form {
+	overflow: auto;
+	clear: left;
 }
 .btn-remove {
+	padding: 0px 3px;
 	float: right;
 }
 .center-block {
@@ -15,15 +17,19 @@ caption {
 	font-size: 1.5em;
    font-weight: bold;
 }
+.table {
+	margin-bottom: 0;
+}
+input[type=text] {
+	padding: 6px 8px;
+}
 
 /**** Language list styles ****/
-#table-languages th, #table-languages td  {
+#section-languages th, #section-languages td  {
 	vertical-align: middle;
 	font-size: 1.2em;
 }
-.lang-code-col {
-	min-width: 3.5em;
-}
+
 .lang-name-col {
 
 }
@@ -34,12 +40,67 @@ caption {
    margin-right: 0.8em;
    min-width: 2em;
 }
-.lang-li {
-	line-height: 34px;
-}
-.add-lang-li {
-	padding: 10px 5px;
-}
 .badge {
 	vertical-align: middle;
+}
+@media (min-width: 768px) {
+	.lang-code-col {
+		width: 7em;
+	}
+	#add-lang-form #new-lang-code {
+	    width: 7em;
+	    margin-right: 1.5em;
+	    float: left;
+	 }
+	 #add-lang-form #new-lang-name {
+	    width: 10.5em;
+	    margin-right: 0.5em;
+	    float: left;
+	 }
+	 .two-col-input {
+	 	width: 46%;
+		min-width: 3em;
+	 }
+	 .two-col-input.left {
+		float: left;
+		margin-right: 2em;
+	}
+	.two-col-input.right {
+		float: right;
+	}
+
+}
+
+/**** Translations section styles ****/
+#section-main {
+	margin-top: 4em;
+}
+
+
+/**** Errors ****/
+.ng-dirty.ng-invalid, .ng-submitted .ng-invalid {
+    border-color: #a94442;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+}
+.ng-dirty.ng-invalid:focus, .ng-submitted .ng-invalid:focus {
+   border-color: #843534;
+   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483;
+   box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483;
+}
+.form-error {
+	color: #a94442;
+	font-weight: bold;
+	font-size: 1.2em;
+}
+
+
+/**** Main styles ****/
+#section-main {
+	overflow: auto;
+}
+section.terms-block {
+    width: 50%;
+    height: 150px;
+    float: left;
 }
