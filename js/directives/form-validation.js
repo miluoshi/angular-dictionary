@@ -1,4 +1,4 @@
-//
+// Directive providing async validator for checking for duplicate entries
 app.directive('checkDuplicate', ['$injector', function($injector){
    return {
       restrict: 'A',
@@ -42,26 +42,5 @@ app.directive('checkLanguage', function(){
 
       });
     }
-  };
-});
-
-app.directive('termPlaceholder', function(){
-  return {
-    link: function (scope, element, attrs) {
-      //console.log(attrs.termPlaceholder);
-      var placeholder = attrs.termPlaceholder ? 'Fráza v jazyku' + scope.getLangName(attrs.termPlaceholder) : 'Vyber si najprv hore jazyk';
-      //console.log(placeholder);
-      attrs.$set('placeholder', placeholder);
-      scope.$watch('langCode', function(newVal, oldVal){
-        var placeholder = newVal ? 'Fráza v jazyku' + scope.getLangName(newVal) : 'Vyber si najprv hore jazyk';
-        attrs.$set('placeholder', placeholder);
-      });
-    }
-  };
-});
-
-app.filter('filterLanguage', function() {
-  return function(term, language) {
-
   };
 });

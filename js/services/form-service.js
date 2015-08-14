@@ -1,3 +1,6 @@
+/*
+ * Service providing form operations (reset form)
+ */
 app.factory('formService', function($timeout, $window) {
 
   function Form(formEl) {

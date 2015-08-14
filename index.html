@@ -15,95 +15,97 @@
 
    <script type="text/ng-template" id="dict-index.html">
       <div class="container">
-         <section id="section-languages" class="center-block col-md-8 col-sm-12 .col-xs-12">
-            <header id="header">
-               <h1>Editor prekladov | AngularJS</h1>
-            </header>
+         <header id="header">
+            <h1>Editor prekladov | AngularJS</h1>
+         </header>
 
-            <table id="section-languages" class="table table-condensed">
+         <section id="section-languages" class="center-block col-md-8 col-sm-12 .col-xs-12">
+            <table id="section-languages" class="table table-bordered table-hover">
                <caption>Zoznam jazykov:</caption>
                <thead ng-show="languages.length">
                   <tr>
                      <th>Kód jazyka</th>
                      <th>Názov jazyka</th>
-                     <th>Počet prekladov</th>
                   </tr>
                </thead>
                <tbody class="table-hover">
                   <tr ng-repeat="lang in languages" class="lang-row">
                      <th class="lang-code-col">
-                        <span class="lang-code" editable-text="lang.code" e-required onbeforesave="editLangCode($data, lang)">{{ lang.code }}</span>
+                        <span class="lang-code" e-class="input-sm" editable-text="lang.code" e-required onbeforesave="editLangCode($data, lang)">{{ lang.code }}</span>
                      </th>
                      <td class="lang-name-col">
-                        <span class="lang-name" editable-text="lang.name" onaftersave="editLangName(lang)">{{ lang.name }}</span>
-                        <button type="button" ng-click="removeLang(lang)" class="btn btn-danger btn-remove glyphicon glyphicon-remove" title="Vymazať"></button>
+                        <span class="lang-name" e-class="input-sm" editable-text="lang.name" onaftersave="editLangName(lang)">{{ lang.name }}</span>
+                        <button type="button" ng-click="removeLang(lang)" class="btn btn-danger btn-remove glyphicon glyphicon-trash" title="Vymazať"></button>
                      </td>
-                     <td class="terms-total-col"><span class="badge">{{ lang.terms.length }}</span></td>
                   </tr>
                </tbody>
             </table>
             <form id="add-lang-form" name="addLangForm" novalidate ng-submit="addLangForm.$valid && addLang()">
-               <input type="text" id="new-lang-code" ng-model="newLang.code" name="newLangCode" placeholder="Kód jazyka" check-duplicate="lang" ng-disabled="saving" required class="form-control" ng-model-options="{ 'updateOn': 'blur' }" autofocus />
-               <input type="text" id="new-lang-name" ng-model="newLang.name" name="newLangName" placeholder="Pridať nový jazyk" ng-disabled="saving" required class="form-control" />
+               <input type="text" id="new-lang-code" ng-model="newLang.code" name="newLangCode" placeholder="Kód jazyka" check-duplicate="lang" required class="form-control input-sm" ng-model-options="{ 'updateOn': 'blur' }" />
+               <input type="text" id="new-lang-name" ng-model="newLang.name" name="newLangName" placeholder="Pridať nový jazyk" required class="form-control input-sm" />
                <button type="submit" class="btn btn-primary">Uložiť</button>
                <p ng-show="addLangForm.newLangCode.$error.checkDuplicate" class="help-block form-error">Jazyk s tymto kodom uz existuje</p>
                <p ng-show="addLangForm.$submitted && (addLangForm.newLangCode.$error.required || addLangForm.newLangName.$error.required)" class="help-block form-error">Toto je povinne</p>
             </form>
-
          </section>
 
-         <main id="section-main" class="center-block col-md-8 col-sm-12 .col-xs-12" ng-show="languages.length">
-            <form id="term-langs-form" name="termLangsForm">
-               <select id="language-from" ng-model="languageFrom" class="form-control select-lang two-col-input left" check-language>
-                  <option value="">Vyber jazyk 1</option>
-                  <option value="{{lang.code}}" ng-repeat="lang in languages">{{ lang.name }}</option>
-               </select>
-               <select id="language-to" ng-model="languageTo" class="form-control select-lang two-col-input right" ng-checked="expression" check-language>
-                  <option value="">Vyber jazyk 2</option>
-                  <option value="{{lang.code}}" ng-repeat="lang in languages">{{ lang.name }}</option>
-               </select>
-            </form>
+         <section id="section-main" class="center-block col-md-8 col-sm-12 .col-xs-12" ng-show="languages.length">
+            <h2>Preklady:</h2>
 
-            <section id="language-1-terms" class="terms-block">
-               <ul>
-                  <li ng-repeat="term in terms.from | filter:{lang: languageFrom} | orderBy:id">
-                     <span data-id="{{ term.id }}">{{term.lang}} {{term.text}}</span>
-                  </li>
-               </ul>
-            </section>
-            <section id="language-2-terms" class="terms-block">
-               <ul>
-                  <li ng-repeat="term in terms.to | filter:{lang: languageTo} | orderBy:id">
-                     <span data-id="{{ term.id }}">{{term.lang}} {{term.text}}</span>
-                  </li>
-               </ul>
-            </section>
-            <form id="add-term-form" name="addTermForm" novalidate ng-submit="addTermForm.$valid && addTerm()">
-               <input type="text" id="new-term-from" ng-model="newTerm.from.text" name="newTermFrom" term-placeholder="{{languageFrom}}" check-duplicate="lang" ng-disabled="saving" required class="form-control two-col-input left" ng-model-options="{ 'updateOn': 'blur' }" />
-               <input type="text" id="new-term-to" ng-model="newTerm.to.text" name="newTermTo" placeholder="Fráza v jazyku {{ getLangName(languageTo) }}" ng-disabled="saving" required class="form-control two-col-input right" />
-               <button type="submit" class="btn btn-primary">Uložiť</button>
-               <p ng-show="addTermForm.newLangCode.$error.checkDuplicate && !addTermForm.newLangCode.$pristine" class="help-block form-error">Jazyk s tymto kodom uz existuje</p>
-               <p ng-show="addTermForm.newLangCode.$error.required && addTermForm.newLangCode.$touched ||
-               addTermForm.newLangName.$error.required && addTermForm.newLangName.$touched" class="help-block form-error">Toto je povinne</p>
-            </form>
+            <table id="section-terms" class="table table-bordered table-hover">
+               <tbody class="table-hover">
+                  <tr>
+                     <td>
+                        <select id="language-from" ng-model="languageFrom" class="form-control input-sm" check-language>
+                           <option value="">Vyber jazyk 1</option>
+                           <option value="{{lang.code}}" ng-repeat="lang in languages">{{ lang.name }}</option>
+                        </select>
+                     </td>
+                     <td>
+                        <select id="language-to" ng-model="languageTo" class="form-control input-sm" ng-checked="expression" check-language>
+                           <option value="">Vyber jazyk 2</option>
+                           <option value="{{lang.code}}" ng-repeat="lang in languages">{{ lang.name }}</option>
+                        </select>
+                     </td>
+                     <td class="col-form"></td>
+                  </tr>
+                  <tr ng-repeat="(i, term) in terms" class="term-row">
+                     <td class="term-from-col">
+                        <div e-class="input-sm" editable-text="term.from.text" e-name="termFrom" e-form="termForm">{{ term.from.text || '-' }}</div>
+                     </td>
+                     <td class="term-to-col">
+                        <div e-class="input-sm" editable-text="term.to.text" e-name="termTo" e-form="termForm"  e-ui-keypress="{13:'termForm.$submit()',esc:'termForm.$hide()'}">{{ term.to.text || '-' }}</div>
+                     </td>
+                     <td class="col-form">
+                        <form id="term-langs-form" editable-form name="termForm" onbeforesave="checkTermForm($data)" onaftersave="saveTerms($data, term)" ng-show="termForm.$visible" class="form-buttons form-inline" shown="inserted == term">
+                           <button type="submit" ng-disabled="termForm.$waiting" class="btn btn-primary glyphicon glyphicon-ok" title="Uložiť"></button>
+                           <button type="button" ng-disabled="termForm.$waiting" ng-click="cancel($index, term, termForm);" class="btn btn-default glyphicon glyphicon-remove" title="Zrušiť"></button>
+                        </form>
+                        <div class="buttons" ng-show="!termForm.$visible && languageTo">
+                           <button class="btn btn-warning btn-edit glyphicon glyphicon-edit" ng-click="termForm.$show()" title="Upraviť"></button>
+                           <button class="btn btn-danger glyphicon glyphicon-trash" ng-click="removeTerm($index, term)" title="Vymazať"></button>
+                        </div>
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
 
-         </main>
-         <footer id="footer">
-
-         </footer>
+            <button class="btn btn-success btn-add-term" ng-show="languageFrom && languageTo" ng-click="addTerm()">Pridať preklad</button>
+         </section>
       </div>
    </script>
    <script src="libs/bootstrap/js/jquery-1.11.3.min.js"></script>
-   <script src="libs/bootstrap/js/bootstrap.js"></script>
-   <script src="libs/angular.js"></script>
-   <script src="libs/angular-route.js"></script>
+   <script src="libs/bootstrap/js/bootstrap.min.js"></script>
+   <script src="libs/angular.min.js"></script>
+   <script src="libs/angular-route.min.js"></script>
    <script src="libs/angular-local-storage.min.js"></script>
-   <script src="libs/angular-xeditable/js/xeditable.js"></script>
+   <script src="libs/angular-xeditable/js/xeditable.min.js"></script>
    <script src="js/app.js"></script>
+   <script src="js/controllers/dict-ctrl.js"></script>
    <script src="js/services/Storage.js"></script>
-   <script src="js/services/langService.js"></script>
-   <script src="js/services/termService.js"></script>
-   <script src="js/services/formService.js"></script>
-   <script src="js/directives/form_validation.js"></script>
+   <script src="js/services/lang-service.js"></script>
+   <script src="js/services/term-service.js"></script>
+   <script src="js/services/form-service.js"></script>
+   <script src="js/directives/form-validation.js"></script>
 </body>
 </html>

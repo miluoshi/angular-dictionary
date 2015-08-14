@@ -14,19 +14,23 @@ app.factory('Storage', ['localStorageService', '$q', function(localStorageServic
   };
 
   Store.prototype._saveAll = function () {
-    for(var i in this.items)
-      delete this.items[i].$$hashKey;
+    /*for(var i in this.items) {
+      if(typeof this.items[i].$$hashKey !== "undefined")
+        delete this.items[i].$$hashKey;
+    }*/
 
     this.storageProvider.set(this.storageId, JSON.stringify(this._getCurrentStore()));
   };
 
+  // Get array index of item
   Store.prototype._indexOf = function(item) {
     for(var i in this.items) {
-      if(this.items[i].id === item.id)
+      if(this.items[i].id === item.id && this.items[i].lang === item.lang)
         return i;
     }
     return -1;
   };
+
 
   Store.prototype._getCurrentStore = function() {
     return {
@@ -36,9 +40,16 @@ app.factory('Storage', ['localStorageService', '$q', function(localStorageServic
   };
 
   Store.prototype.remove = function(item) {
+    console.log('Store.remove');
     var deferred = $q.defer();
 
-    this.items.splice(this._indexOf(item), 1);
+    if( item instanceof Array) {
+      for(var i in item) {
+        this.items.splice(this._indexOf(item[i]), 1);
+      }
+    } else {
+      this.items.splice(this._indexOf(item), 1);
+    }
 
     this._saveAll();
     deferred.resolve(this.items);
@@ -46,8 +57,12 @@ app.factory('Storage', ['localStorageService', '$q', function(localStorageServic
     return deferred.promise;
   };
 
+  Store.prototype.getLastKey = function() {
+    return this.lastKey;
+  };
+
   Store.prototype.getNewKey = function () {
-    this.get();
+    this.lastKey += 1;
 
     return this.lastKey;
   };
@@ -65,12 +80,16 @@ app.factory('Storage', ['localStorageService', '$q', function(localStorageServic
   };
 
   Store.prototype.add = function(item) {
+    console.log('Store.add');
     var deferred = $q.defer();
 
-    item.id = this.lastKey;
-    this.lastKey += 1;
-
-    this.items.push(item);
+    if( item instanceof Array) {
+      for(var i in item) {
+        this.items.push(item[i]);
+      }
+    } else {
+      this.items.push(item);
+    }
 
     this._saveAll();
     deferred.resolve(this.items);
@@ -78,10 +97,8 @@ app.factory('Storage', ['localStorageService', '$q', function(localStorageServic
     return deferred.promise;
   };
 
-  Store.prototype.edit = function(item) {
-    if( item.$$hashKey !== undefined )
-      delete item.$$hashKey;
-
+  // Edit single item
+  Store.prototype.editOne = function(item) {
     var index = this._indexOf(item);
 
     if( index >= 0)
@@ -93,6 +110,23 @@ app.factory('Storage', ['localStorageService', '$q', function(localStorageServic
     }
   };
 
+  // Edit item. If array is provided, edit all items in array
+  Store.prototype.edit = function(item) {
+    console.log('Store.edit');
+    var promise, p;
+
+    if( item instanceof Array) {
+      for(var i in item) {
+        promise = this.editOne(item[i]);
+      }
+    } else {
+      promise = this.editOne(item);
+    }
+
+    return promise;
+  };
+
+  // Save item to defined index in storage array
   Store.prototype.put = function(item, index) {
     var deferred = $q.defer();
 
@@ -103,6 +137,12 @@ app.factory('Storage', ['localStorageService', '$q', function(localStorageServic
 
     return deferred.promise;
   };
+
+  /*
+  Store.prototype.exists = function(item) {
+    return this._indexOf(item) > -1;
+  };
+  */
 
   return Store;
 }]);

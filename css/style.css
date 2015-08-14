@@ -3,17 +3,29 @@ h1 {
 	text-align: center;
 }
 form {
-	overflow: auto;
 	clear: left;
 }
-.btn-remove {
-	padding: 0px 3px;
+.lang-name-col .btn-remove {
 	float: right;
+}
+table .btn {
+	padding: 0px 3px;
+	margin: 0 0.25em;
+}
+.btn-remove, .btn-edit, .col-form button {
+	float: left;
+}
+.btn-add-term {
+	margin-top: 1em;
 }
 .center-block {
 	float: inherit;
 }
-caption {
+caption, h2 {
+	padding-top: 8px;
+	padding-bottom: 8px;
+	color: #777;
+	text-align: left;
 	font-size: 1.5em;
    font-weight: bold;
 }
@@ -23,11 +35,16 @@ caption {
 input[type=text] {
 	padding: 6px 8px;
 }
+.col-form {
+	width: 6em;
+}
+.overflow {
+	overflow: auto;
+}
 
 /**** Language list styles ****/
 #section-languages th, #section-languages td  {
 	vertical-align: middle;
-	font-size: 1.2em;
 }
 
 .lang-name-col {
@@ -101,6 +118,15 @@ input[type=text] {
 }
 section.terms-block {
     width: 50%;
-    height: 150px;
     float: left;
+}
+#btn-add-term {
+	margin: 1.5em auto;
+}
+.input-sm {
+	height: 26px;
+}
+table#section-terms tr.term-row td,
+table#section-languages tr.lang-row td {
+	line-height: 2;
 }

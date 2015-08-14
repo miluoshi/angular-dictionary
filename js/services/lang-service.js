@@ -3,6 +3,13 @@ app.factory('langService', ['$q', 'Storage', function($q, Storage){
   var STORAGE_ID = "translations-langs";
   var storage = new Storage(STORAGE_ID);
 
+  function add(lang) {
+    lang.id = storage.getNewKey();
+
+    return storage.add(lang);
+  }
+
+  // Find name of language with given language code
 	function getLangName(code) {
     for(var i in storage.items) {
       if( storage.items[i].code === code)
@@ -19,7 +26,7 @@ app.factory('langService', ['$q', 'Storage', function($q, Storage){
 
     for(var i in storage.items) {
       if(storage.items[i].id !== item.id && storage.items[i].code === item.code ) {
-        deferred.reject("Jazyk s tymto kodom uz existuje");
+        deferred.reject("Jazyk s týmto kódom už existuje");
         return deferred.promise;
       }
     }
@@ -28,7 +35,8 @@ app.factory('langService', ['$q', 'Storage', function($q, Storage){
     return deferred.promise;
   };
 
-  var editLang = function(lang) {
+  // Edit existing language
+  var edit = function(lang) {
     return isUnique(lang)
       .then(function() {
         return storage.edit(lang);
@@ -37,11 +45,12 @@ app.factory('langService', ['$q', 'Storage', function($q, Storage){
       });
   };
 
-  var checkDuplicate = function(value) {
+  // Checks if language with give already exists
+  var checkDuplicate = function(code) {
     return isUnique({
-      code: value,
+      code: code,
       name: '',
-      id: storage.getNewKey()
+      id: storage.getLastKey()+1
     });
   };
 
@@ -50,9 +59,8 @@ app.factory('langService', ['$q', 'Storage', function($q, Storage){
     getLangName:    getLangName,
     isUnique:       isUnique,
     getAll:         function() { return storage.get(); },
-    getNewKey:      function() { return storage.getNewKey(); },
-    add:            function(lang) { return storage.add(lang); },
-    edit:           editLang,
+    add:            add,
+    edit:           edit,
     remove:         function(item) { return storage.remove(item); }
   };
 }]);
